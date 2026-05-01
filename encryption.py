@@ -1,3 +1,13 @@
+# shar7 el code: el file be import fernet 3lshan na3mel encryption w decryption b AES-128
+# el file da kaman be import hashlib 3lshan na3mel hashing lel passwords
+# be3mel funtion make_key_from_password 3lshan ya3mel key lel encryption based 3ala el password
+# be7awel el password le bytes 3lshan betkon ashal lel computer eno yet3amel ma3 bytes 3an charcters
+# behash el password 1000 mara 3lshan yeb2a strong
+# be3mel base64 encoding 3lshan yeb2a el key text format mesh bytes format for Fernet
+# be3mel encrypt_file function 3lshan ya5od el password wel file content w yerga3 el encrypted version
+# be3mel decrypt_file function 3lshan ya5od el password wel encrypted content w yerga3 el original content
+# test: run the file alone to test the encryption and decryption process, and also test with a wrong password to check security 
+#-----------------------------------------------------------------------------------------------------------------------------------------
 # Fernet: Encryption tool that scrambles and unscrambles using AES-128
 # It takes a key to encrypt or decrypt your files
 from cryptography.fernet import Fernet
