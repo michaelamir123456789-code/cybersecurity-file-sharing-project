@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Secure File Sharing Platform</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="auth-card">
+        <!-- Header Section -->
+        <div class="auth-header">
+            <div class="logo-icon">🔐</div>
+            <h2>Welcome Back</h2>
+            <p>Sign in to your secure file sharing account</p>
+        </div>
+        <!-- Login Form -->
+        <form method="POST" action="{{ url_for('login') }}" class="form-container">
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Enter your username" required autocomplete="username">
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <div class="password-wrapper">
+                    <input type="password" name="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
+                    <button type="button" class="toggle-password" onclick="togglePassword()">👁️</button>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="loginBtn">Sign In</button>
+        </form>
+
+        <!-- Register Link -->
+        <div class="register-link">
+            <p>Don't have an account? <a href="Register.html">Create Account</a></p>
+        </div>
+
+        <!-- Security Footer -->
+        <div class="security-footer">
+            <div class="security-badges">
+                <span>🔒 AES-256 Encryption</span>
+                <span>🛡️ Zero-Knowledge Security</span>
+                <span>📋 Complete Audit Log</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>
