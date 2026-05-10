@@ -4,7 +4,7 @@
     <title>Login - Secure File Sharing Platform</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
@@ -16,7 +16,7 @@
             <p>Sign in to your secure file sharing account</p>
         </div>
         <!-- Login Form -->
-        <form method="POST" action="{{ url_for('login') }}" class="form-container">
+        <form method="POST" action="login.html" class="form-container">
             <div class="input-group">
                 <label>Username</label>
                 <input type="text" name="username" placeholder="Enter your username" required autocomplete="username">
@@ -35,7 +35,7 @@
 
         <!-- Register Link -->
         <div class="register-link">
-            <p>Don't have an account? <a href="Register.html">Create Account</a></p>
+            <p>Don't have an account? <a href="register.html">Create Account</a></p>
         </div>
 
         <!-- Security Footer -->
@@ -48,6 +48,6 @@
         </div>
     </div>
 
-    <script src="login.js"></script>
+    <script src="/static/login.js"></script>
 </body>
 </html>
