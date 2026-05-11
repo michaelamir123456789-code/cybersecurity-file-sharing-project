@@ -9,36 +9,44 @@
 <body>
 
     <div class="auth-card">
-        <!-- Header Section -->
         <div class="auth-header">
             <div class="logo-icon">🔐</div>
             <h2>Welcome Back</h2>
             <p>Sign in to your secure file sharing account</p>
         </div>
-        <!-- Login Form -->
-        <form method="POST" action="login.html" class="form-container">
+
+        <!-- Flash messages: show success or error from app.py (login failed, etc.) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/login" class="form-container">
             <div class="input-group">
                 <label>Username</label>
-                <input type="text" name="username" placeholder="Enter your username" required autocomplete="username">
+                <input type="text" name="username" placeholder="Enter your username" required>
             </div>
 
             <div class="input-group">
                 <label>Password</label>
                 <div class="password-wrapper">
-                    <input type="password" name="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
-                    <button type="button" class="toggle-password" onclick="togglePassword()">👁️</button>
+                    <input type="password" name="password" id="loginPassword" placeholder="Enter your password" required>
+                    <!-- togglePassword: calls the function in login.js to show/hide password -->
+                    <button type="button" class="toggle-password" id="togglePasswordBtn" onclick="togglePassword()">Show</button>
                 </div>
             </div>
 
+            <!-- id="loginBtn": login.js uses this ID to add loading animation when clicked -->
             <button type="submit" class="submit-btn" id="loginBtn">Sign In</button>
         </form>
 
-        <!-- Register Link -->
         <div class="register-link">
-            <p>Don't have an account? <a href="register.html">Create Account</a></p>
+            <p>Don't have an account? <a href="/register">Create Account</a></p>
         </div>
 
-        <!-- Security Footer -->
         <div class="security-footer">
             <div class="security-badges">
                 <span>🔒 AES-256 Encryption</span>
@@ -47,7 +55,7 @@
             </div>
         </div>
     </div>
-
+    <!-- login.js: handles password toggle and loading animation on submit -->
     <script src="/static/login.js"></script>
 </body>
 </html>
