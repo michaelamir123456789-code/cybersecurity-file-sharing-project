@@ -52,7 +52,7 @@ class User(db.Model):
     # ba7ot fel file (mesh real column, it's a relationship) hay link le table el file 
     # backref='owner' lets us do file.owner to get the user
     # lazy=True means it will load files only when we ask for them (not all at once) (3lshan el memory mesh aktar) 
-    files = db.relationship('File', backref='owner', lazy=True)
+    files = db.relationship('File', foreign_keys='File.owner_id', backref='owner', lazy=True)
 
 # TABLE 2: File: Stores information about uploaded files
 class File(db.Model):
@@ -74,8 +74,8 @@ class File(db.Model):
     
     # Owner ID: which user owns this file (links to User table)
     # Example: 1 (means user with id=1 owns this file)
-    owner_id = db.Column(db.Integer, nullable=False)
-    
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
     # When was it uploaded (automatically sets to current time)
     # default=datetime.utcnow if not specified, use the current time
     uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -92,13 +92,12 @@ class Share(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     
     # Stores the ID of the user who shared the file (the owner).
-    file_id = db.Column(db.Integer, nullable=False)
-    
+    file_id = db.Column(db.Integer, db.ForeignKey('file.id'), nullable=False)
     # Which user can access this file (links to User table)
-    shared_with_user_id = db.Column(db.Integer, nullable=False)
+    shared_with_user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
     # Who shared this file (the owner)
-    shared_by_user_id = db.Column(db.Integer, nullable=False)
+    shared_by_user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
     # PERMISSION 1: Can they VIEW the file?
     # True = can view, False = cannot view
@@ -136,7 +135,7 @@ class AuditLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     
     # Which user performed the action (links to User table)
-    user_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
     # What action did they do?
     # Examples: "login", "logout", "upload", "view", "download", "share"
@@ -154,4 +153,4 @@ class AuditLog(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationship to user (lets us do log.user to get user info)
-    user = db.relationship('User', backref='logs')
+    user = db.relationship('User', foreign_keys='AuditLog.user_id', backref='logs')
