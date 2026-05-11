@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Secure File Sharing Platform</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- Flash messages: show success or error from app.py (upload success, share error, etc.) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="welcome-text">
+                <h2>Welcome, {{ session.username }}</h2>
+                <p>Your secure file sharing dashboard</p>
+                <div class="encryption-badge">AES-256 Encrypted</div>
+            </div>
+            <div class="dashboard-actions">
+                <a href="/upload" class="btn btn-primary">Upload File</a>
+                <a href="/logout" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">{{ my_files|length }}</div>
+                <div class="stat-label">Files You Own</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ shared_with_me|length }}</div>
+                <div class="stat-label">Files Shared With You</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ logs|length }}</div>
+                <div class="stat-label">Recent Activities</div>
+            </div>
+        </div>
+
+        <!-- My Files Section (THIS WAS MISSING!) -->
+        <div class="section">
+            <div class="section-title">My Files</div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Upload Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for file in my_files %}
+                        <tr>
+                            <td>{{ file.original_name }}</td>
+                            <td>{{ file.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                <a href="/view/{{ file.id }}" class="btn btn-primary btn-sm">View</a>
+                                <!-- download button: owner can always download their own files (app.py checks owner_id) -->
+                                <a href="/download/{{ file.id }}" class="btn btn-success btn-sm">Download</a>
+                                <a href="/share/{{ file.id }}" class="btn btn-warning btn-sm">Share</a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr class="empty-row">
+                            <td colspan="3">No files uploaded yet. <a href="/upload">Click here to upload</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Shared With Me Section -->
+        <div class="section">
+            <div class="section-title">Files Shared With Me</div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Owner</th>
+                            <th>Permission</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for share in shared_with_me %}
+                        <tr>
+                            <td>{{ share.file.original_name }}</td>
+                            <td>{{ share.shared_by.username }}</td>
+                            <td>
+                                {% if share.can_download %}
+                                    View and Download
+                                {% else %}
+                                    View Only
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="/view/{{ share.file.id }}" class="btn btn-primary btn-sm">View</a>
+                                {% if share.can_download %}
+                                    <a href="/download/{{ share.file.id }}" class="btn btn-success btn-sm">Download</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr class="empty-row">
+                            <td colspan="4">No files shared with you yet. Ask someone to share a file with you</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Security Audit Log Section (ONCE, NOT TWICE!) -->
+        <div class="section">
+            <div class="section-title">Security Audit Log</div>
+            
+            <div class="log-container">
+                {% for log in logs %}
+                <div class="log-entry">
+                    <div class="log-time">{{ (log.timestamp.replace(hour=log.timestamp.hour + 3)).strftime('%Y-%m-%d %I:%M:%S %p') if log.timestamp else 'No date' }}</div>
+                    <div class="log-action">{{ log.action }}</div>
+                    <div class="log-ip">IP Address: {{ log.ip_address if log.ip_address else 'Not recorded' }}</div>
+                </div>
+                {% else %}
+                <div class="log-entry">
+                    <div class="log-action">No activity recorded yet</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
