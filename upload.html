@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload File - Secure File Sharing Platform</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="logo-icon">📤</div>
+            <h2>Upload File</h2>
+            <p>Your file will be encrypted with AES-256 before storage</p>
+        </div>
+
+        <!-- Flash messages: show success or error from app.py (file uploaded, error, etc.) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" enctype="multipart/form-data" action="/upload" class="form-container">
+    <div class="file-drop-area" id="fileDropArea">
+        <input type="file" name="file" id="fileInput" required>
+        <label for="fileInput" class="file-label">Choose File</label>
+        <div class="file-name" id="fileName">No file chosen</div>
+        <p style="margin-top: 15px; font-size: 12px;">Supported files: Any file type</p>
+    </div>
+
+    <div style="margin: 20px 0; padding: 15px; background: rgba(59, 130, 246, 0.05); border-radius: 12px;">
+        <p style="font-size: 13px;">
+            🔒 Your file will be encrypted with <strong>AES-256</strong> using your password.<br>
+            The encrypted file will be stored on our servers. Only you can decrypt it.
+        </p>
+    </div>
+
+    <button type="submit" class="submit-btn">Upload and Encrypt</button>
+</form>
+
+        <div class="login-link">
+            <p><a href="/dashboard">← Back to Dashboard</a></p>
+        </div>
+
+        <div class="security-footer">
+            <div class="security-badges">
+                <span>AES-256 Encryption</span>
+                <span>Zero-Knowledge Security</span>
+                <span>Complete Audit Log</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- upload.js: handles file drag-and-drop and file name display -->
+    <script src="/static/upload.js"></script>
+</body>
+</html>
