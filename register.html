@@ -15,8 +15,16 @@
             <p>Join our secure file sharing platform</p>
         </div>
 
-        <!-- Registration Form -->
-        <form method="POST" action="register.html" class="form-container" id="registerForm">
+        <!-- Flash messages: show success or error from app.py (username taken, passwords don't match, etc.) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/register" class="form-container" id="registerForm">
             <div class="input-group">
                 <label>Username</label>
                 <input type="text" name="username" id="username" placeholder="Choose a username" required>
@@ -25,8 +33,12 @@
             <div class="input-group">
                 <label>Password</label>
                 <div class="password-wrapper">
-                    <input type="password" name="password" id="password" placeholder="Create a strong password" required>
-                    <button type="button" class="toggle-password" onclick="togglePassword()">👁️</button>
+                    <input type="password" name="password" id="password" 
+                           placeholder="Create a strong password" 
+                           onkeydown="if(event.key === ' ') event.preventDefault()"
+                           required>
+                    <!-- togglePassword: calls the function in register.js to show/hide main password -->
+                    <button type="button" class="toggle-password" id="togglePasswordBtn" onclick="togglePassword()">Show</button>
                 </div>
                 
                 <div class="strength-meter">
@@ -39,7 +51,7 @@
                 <div class="requirements-list">
                     <p>Password requirements:</p>
                     <ul>
-                        <li id="req-length" class="invalid">8 or more characters</li>
+                        <li id="req-length" class="invalid">8 or more characters (no spaces)</li>
                         <li id="req-upper" class="invalid">One uppercase letter (A-Z)</li>
                         <li id="req-lower" class="invalid">One lowercase letter (a-z)</li>
                         <li id="req-number" class="invalid">One number (0-9)</li>
@@ -50,20 +62,22 @@
             <div class="input-group">
                 <label>Confirm Password</label>
                 <div class="password-wrapper">
-                    <input type="password" name="confirm_password" id="confirmPassword" placeholder="Confirm your password" required>
-                    <button type="button" class="toggle-password" onclick="toggleConfirmPassword()">👁️</button>
+                    <input type="password" name="confirm_password" id="confirmPassword" 
+                           placeholder="Confirm your password" 
+                           onkeydown="if(event.key === ' ') event.preventDefault()"
+                           required>
+                    <!-- toggleConfirmPassword: calls the function in register.js to show/hide confirm password -->
+                    <button type="button" class="toggle-password" id="toggleConfirmBtn" onclick="toggleConfirmPassword()">Show</button>
                 </div>
                 <div class="match-message" id="matchMessage"></div>
             </div>
-            <button type="submit" class="submit-btn">Create Account</button>
+            <button type="submit" class="submit-btn" id="registerBtn">Create Account</button>
         </form>
 
-        <!-- Link to Login Page -->
         <div class="login-link">
-            <p>Already have an account? <a href="login.html">login</a></p>
+            <p>Already have an account? <a href="/login">Sign In</a></p>
         </div>
 
-        <!-- Footer -->
         <div class="security-footer">
             <div class="security-badges">
                 <span>🔒 AES-256 Encryption</span>
@@ -73,6 +87,7 @@
         </div>
     </div>
 
-    <script src="register.js"></script>
+    <!-- register.js: handles password toggle, strength meter, match checker, and form validation -->
+    <script src="/static/register.js"></script>
 </body>
 </html>
