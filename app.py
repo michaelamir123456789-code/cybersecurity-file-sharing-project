@@ -1,3 +1,4 @@
+
 """
 SECURE FILE SHARING PLATFORM
 """
@@ -58,6 +59,10 @@ os.makedirs('encrypted_files', exist_ok=True)
 # be Connect the database to our app
 db.init_app(app)
 
+# ========== FIX 1: ADD THIS LINE ==========
+app.app_context().push()
+# ==========================================
+
 # Create all database tables (User, File, Share, AuditLog)
 with app.app_context():
     db.create_all()
@@ -66,20 +71,23 @@ with app.app_context():
 # STEP 3: HELPER FUNCTION: LOG USER ACTIONS
 # be3mel function add_log 3lshan y record el actions eli el user 3amalha (login, upload, share, etc) 
 # w ye record el wa2t eli 7asal feh el action fa ba5od el user id w el action w ba create log entry w ba saveha fel database
-def add_log(user_id, action):
+def add_log(user_id, action, ip_address=None):
     """
     Record what the user did in the audit log.
     Example: "User 1 logged in", "User 1 uploaded tax.pdf"
     """
+    # If no IP address provided, get it from the request
+    if ip_address is None:
+        ip_address = request.remote_addr
+    
     # Create a new log entry
-    log = AuditLog(user_id=user_id, action=action)
+    log = AuditLog(user_id=user_id, action=action, ip_address=ip_address)
     
     # Add it to the database session (prepare to save)
     db.session.add(log)
     
     # Save it permanently to the database
     db.session.commit()
-
 
 # STEP 4: HOME PAGE
 # be3mel home page eli lama el user yefte7 el website 
@@ -160,8 +168,10 @@ def register():
         # Get confirm password from form
         confirm = request.form['confirm_password']
         
+        # ========== FIX 2: CHANGE THIS LINE ==========
         # Check if username already exists in database
-        if User.query.filter_by(username=username).first():
+        if db.session.query(User).filter_by(username=username).first():
+        # =============================================
             # lw mawgod fel db haytla3 flash w yeb2a redirect lel register page tany
             flash('Username already taken!', 'error')
             return redirect('/register')
@@ -236,7 +246,6 @@ def dashboard():
                          shared_with_me=shared_files,
                          logs=logs)
 
-
 # STEP 8: UPLOAD FILE PAGE
 # be3mel upload page eli el user yeb2a yeshof feha form 3lshan y upload file 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -256,7 +265,7 @@ def upload():
     # lw el method POST hay3mel processing lel file eli et3amal upload
     if request.method == 'POST':
         # Get the uploaded file (from input field named "file")
-        file = request.files['file']
+        file = request.files.get('file')
         
         # Check if a file was actually uploaded
         if file and file.filename:
