@@ -2,7 +2,14 @@
 """
 SECURE FILE SHARING PLATFORM
 """
-# shar7 el code: 
+# shar7 el code: steps:
+# 1.User registers with username and strong password
+# 2.User logs in (session created)
+# 3.User uploads file (automatically encrypted with AES-256)
+# 4.User can share file with another user (choose view only or view+download)
+# 5.Recipient can view or download based on permission
+# 6.All actions are logged to audit log with IP address and timestamp
+# 7.User can logout (session cleared) 
 # -----------------------------------------------------------------------------------------------------------------------
 # import Flask, render_template, request, redirect, session, flash, send_file:
 # Flask: El framework el by5aleena n3mel web application (website)
