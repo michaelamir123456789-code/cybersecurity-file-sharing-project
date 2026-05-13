@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <!-- My Files Section (THIS WAS MISSING!) -->
+        <!-- My Files Section -->
         <div class="section">
             <div class="section-title">My Files</div>
             
@@ -57,7 +57,7 @@
                     <thead>
                         <tr>
                             <th>File Name</th>
-                            <th>Upload Date</th>
+                            <th>Upload Date (Egypt Time)</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -65,10 +65,21 @@
                         {% for file in my_files %}
                         <tr>
                             <td>{{ file.original_name }}</td>
-                            <td>{{ file.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                {% if file.uploaded_at %}
+                                    {% set new_hour = file.uploaded_at.hour + 3 %}
+                                    {% if new_hour >= 24 %}
+                                        {% set new_hour = new_hour - 24 %}
+                                        {{ file.uploaded_at.replace(day=file.uploaded_at.day + 1, hour=new_hour).strftime('%Y-%m-%d %I:%M %p') }}
+                                    {% else %}
+                                        {{ file.uploaded_at.replace(hour=new_hour).strftime('%Y-%m-%d %I:%M %p') }}
+                                    {% endif %}
+                                {% else %}
+                                    No date
+                                {% endif %}
+                            </td>
                             <td>
                                 <a href="/view/{{ file.id }}" class="btn btn-primary btn-sm">View</a>
-                                <!-- download button: owner can always download their own files (app.py checks owner_id) -->
                                 <a href="/download/{{ file.id }}" class="btn btn-success btn-sm">Download</a>
                                 <a href="/share/{{ file.id }}" class="btn btn-warning btn-sm">Share</a>
                             </td>
@@ -118,7 +129,7 @@
                         </tr>
                         {% else %}
                         <tr class="empty-row">
-                            <td colspan="4">No files shared with you yet. Ask someone to share a file with you</td>
+                            <td colspan="4">No files shared with you yet. Ask someone to share a file with you\n                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -126,14 +137,26 @@
             </div>
         </div>
 
-        <!-- Security Audit Log Section (ONCE, NOT TWICE!) -->
+        <!-- Security Audit Log Section with Egyptian Time -->
         <div class="section">
-            <div class="section-title">Security Audit Log</div>
+            <div class="section-title">Security Audit Log (Egypt Time)</div>
             
             <div class="log-container">
                 {% for log in logs %}
                 <div class="log-entry">
-                    <div class="log-time">{{ (log.timestamp.replace(hour=log.timestamp.hour + 3)).strftime('%Y-%m-%d %I:%M:%S %p') if log.timestamp else 'No date' }}</div>
+                    <div class="log-time">
+                        {% if log.timestamp %}
+                            {% set new_hour = log.timestamp.hour + 3 %}
+                            {% if new_hour >= 24 %}
+                                {% set new_hour = new_hour - 24 %}
+                                {{ log.timestamp.replace(day=log.timestamp.day + 1, hour=new_hour).strftime('%Y-%m-%d %I:%M:%S %p') }}
+                            {% else %}
+                                {{ log.timestamp.replace(hour=new_hour).strftime('%Y-%m-%d %I:%M:%S %p') }}
+                            {% endif %}
+                        {% else %}
+                            No date
+                        {% endif %}
+                    </div>
                     <div class="log-action">{{ log.action }}</div>
                     <div class="log-ip">IP Address: {{ log.ip_address if log.ip_address else 'Not recorded' }}</div>
                 </div>
