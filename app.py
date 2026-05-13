@@ -202,7 +202,7 @@ def register():
         )
         
         # Add to database
-        # ba3mel new user object w ba add it lel database session w ba commit 3lshan a sabe it fel database
+        # ba3mel new user object w ba add it lel database session w ba commit 3lshan a save it fel database
         db.session.add(new_user)
         db.session.commit()
         
