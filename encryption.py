@@ -42,7 +42,7 @@ import base64
 def make_key_from_password(password, salt=None):
 
     # Convert password from string to bytes (computers need bytes)
-    # be7awel el password le bytes 3lshan el computer befham el strings howa befham el bytes.
+    # be7awel el password le bytes 3lshan el computer mesh befham el strings howa befham el bytes.
     # w da mohem 3lshan lama ya3mel encryption el computer yeshta8al 3ala bytes
     password_bytes = password.encode()
 
